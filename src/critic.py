@@ -605,6 +605,14 @@ def process_request(environ, start_response):
     try:
         try:
             req = request.Request(db, environ, start_response)
+            if req.getRequestHeader("X-Critic-Debug") is not None:
+                    try:
+                        import debugpy
+                        debugpy.listen(("0.0.0.0", 9000))
+                        print("Debugger is ready to be attached at port 9000")
+                        debugpy.wait_for_client()
+                    except:
+                        pass
 
             # Handle static resources very early.  We don't bother with checking
             # for an authenticated user; static resources aren't sensitive, and
